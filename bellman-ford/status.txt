@@ -1,0 +1,44 @@
+
+
+Aug 14 12
+=======
+
+  Started the conversion to Typescript, but the inclusion the the transpiled javascript is
+  causing a lot of problems...
+  
+  
+  
+  Few work around in progress, and are very promising:
+  
+  1 - Need to have a tsconfig.json
+  
+    This appears to be good for now
+      {
+          "compilerOptions": {
+            "allowJs": true,            
+            "checkJs": true,
+            "outDir": "dist",
+            "sourceMap": true,
+            "target": "ES6",
+            "noImplicitAny": true,
+            "noImplicitReturns": true,
+            "strict": true
+          }
+  }
+    
+  2 - No more import {...} in the HTML file, or even any Javascript calls!
+      Just put the <script src="yourScript.js"> and make all the calls in the .js file
+  
+    https://javascript.plainenglish.io/how-to-use-typescript-in-html-2df0be436d8b
+  
+  3 - Fix the 'ReferenceError: exports is not defined' error
+  
+  In the browser, an error happens at runtime, and the second line of the transpiled ts file
+  is causing problem.
+  
+  the 'exports' variable may not be defined for some reason, add the following script tag:
+  
+  <script>var exports = {};</script> 
+  <script src="index.js"></script>   // This one is your file you did transpile to javascript
+
+ https://stefvanlooveren.me/blog/how-fix-referenceerror-exports-not-defined-typescript#:~:text=Solution,that%20load%20your%20JS%20files.&text=This%20will%20define%20the%20exports,properties%20are%20accessed%20on%20it.
