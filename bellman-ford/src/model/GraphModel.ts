@@ -25,6 +25,8 @@ export class GraphObject {
     nbrVertex : number;
     nbrEdges : number
     edge : Edge[];
+    selectedNode : number;
+    
 
     
     
@@ -34,6 +36,7 @@ export class GraphObject {
         this.nbrVertex = nbrVertex;
         this.nbrEdges = nbrEdges;
         this.edge = [];
+        this.selectedNode = 0;
 
         this.init(nbrVertex,nbrEdges);
     }
@@ -46,11 +49,16 @@ export class GraphObject {
         return this;
     }
 
+
+    getSelectedNode() : number          {   return this.selectedNode; }
+    setSelectedNode(index : number)     {   this.selectedNode = ( index>=0 && index < this.nbrVertex) ? index : 0; }
+
+
     size() {
         return this.nbrVertex;
     }
 
-    getEdgesForNode(v : number) {
+    getEdgesForNode(v : number) : Edge[] {
 
         this.#validateNodeIndex(v, "getEdgesForNode");
 
@@ -79,8 +87,8 @@ export class GraphObject {
              throw "Invalid Node value passed to method " + methodName + " (value is " + val + ")" ;
     }
 
-    printArr(dist : number[]) {
-        console.log("Vertex Distance from Source");
+    printArr(dist : number[],src : number) {
+        console.log("Vertex Distance from Source " + src);
         for (let i = 0; i < this.nbrVertex; i++) {
 
              console.log(`${i} \t\t ${dist[i]}`);
@@ -91,36 +99,38 @@ export class GraphObject {
 }
 
    
-// export function BellmanFord(graph, src) {
-//     const V = graph.nbrVertex;
-//      const E = graph.nbrEdges;
-//      const dist = [];
+export function BellmanFord(graph : GraphObject, src : number)  : number[]{
+    const V = graph.nbrVertex;
+     const E = graph.nbrEdges;
+     const dist = [];
      
-//      for (let i = 0; i < V; i++) {
-//          dist[i] = Number.MAX_SAFE_INTEGER;
-//      }
-//      dist[src] = 0;
+     for (let i = 0; i < V; i++) {
+         dist[i] = Number.MAX_SAFE_INTEGER;
+     }
+     dist[src] = 0;
      
-//      for (let i = 1; i <= V - 1; i++) {
-//          for (let j = 0; j < E; j++) {
-//          const u = graph.edge[j].src;
-//          const v = graph.edge[j].dest;
-//          const weight = graph.edge[j].weight;
-//          if (dist[u] !== Number.MAX_SAFE_INTEGER && dist[u] + weight < dist[v]) {
-//              dist[v] = dist[u] + weight;
-//          }
-//          }
-//      }
+     for (let i = 1; i <= V - 1; i++) {
+         for (let j = 0; j < E; j++) {
+         const u = graph.edge[j].src;
+         const v = graph.edge[j].dest;
+         const weight = graph.edge[j].weight;
+         if (dist[u] !== Number.MAX_SAFE_INTEGER && dist[u] + weight < dist[v]) {
+             dist[v] = dist[u] + weight;
+         }
+         }
+     }
      
-//      for (let i = 0; i < E; i++) {
-//          const u = graph.edge[i].src;
-//          const v = graph.edge[i].dest;
-//          const weight = graph.edge[i].weight;
-//          if (dist[u] !== Number.MAX_SAFE_INTEGER && dist[u] + weight < dist[v]) {
-//          console.log("Graph contains negative weight cycle");
-//          return;
-//          }
-//      }
+     for (let i = 0; i < E; i++) {
+         const u = graph.edge[i].src;
+         const v = graph.edge[i].dest;
+         const weight = graph.edge[i].weight;
+         if (dist[u] !== Number.MAX_SAFE_INTEGER && dist[u] + weight < dist[v]) {
+            console.log("Graph contains negative weight cycle");
+            return dist;
+         }
+     }
  
-//          graph.printArr(dist);
-//      }
+         graph.printArr(dist,src);
+     
+        return dist; 
+    }

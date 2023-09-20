@@ -1,7 +1,8 @@
 
 
 import { CIRCULAR_GRAPH_RENDERING  , CONCENTRIC_GRAPH_RENDERING  ,RANDOM_GRAPH_RENDERING  } from './view/RenderingConstants.js';
-import { GraphObject, Edge }  from './model/GraphModel.js';
+import { BellmanFord,GraphObject, Edge }  from './model/GraphModel.js';
+import { GraphRender}   from './view/GraphRender.js';
 
 
 
@@ -96,15 +97,12 @@ const dfsButtonClickHandler  = () => {
     }
     
 
-      //**if ( (value < 0) || (value > graph.size()) ) {
-        if ( (value < 0) ) {
-        
-
+      if ( (value < 0) || (value > graphObject.size()) ) {
         displayWarningMessage("Invalid Node Index entered!");
         return;
       }
     
-      //graph.setSelectedNode(value);
+      graphObject.setSelectedNode(value);
 
       render();
 
@@ -115,21 +113,33 @@ const dfsAllPathButtonClickHandler  = () => {
   
 
     //*** */
-    // const nbrNodes = graph.size();
+    const nbrNodes = graphObject.size();
 
-    // console.log("Find path for all " + nbrNodes + "Nodes");
+    console.log("Find path for all " + nbrNodes + "Nodes");
 
-    // for (let i=0;i<nbrNodes;i++) {
+    for (let i=0;i<nbrNodes;i++) {
 
-    //     graph.setSelectedNode(i);
-    //     const path = graph.DFS(i);
-    //     console.log(`${i} - ${path}`);
+        graphObject.setSelectedNode(i);
+        //const path = graphObject.DFS(i);
 
-    //     if (path.length === nbrNodes) 
-    //         console.log("%cComplete",'color: #00ff00');
-    //     else
-    //         console.log(`%cPartial ${path.length}`,'color: #ff0000');
-    // }
+        const path : number[] =  BellmanFord(graphObject, i );
+
+      
+
+        // export function BellmanFord(graph : GraphObject, src : number) {
+
+
+       
+
+
+
+        console.log(`${i} - ${path}`);
+
+        if (path.length === nbrNodes) 
+            console.log("%cComplete",'color: #00ff00');
+        else
+            console.log(`%cPartial ${path.length}`,'color: #ff0000');
+    }
     //** */
 }
 
@@ -169,6 +179,26 @@ export const render = () : void=> {
     console.log("Render called...");
 
     updateGraphDetailSection();
+
+    var canvas = document.getElementById("graph-canvas") as HTMLCanvasElement;
+
+    if (canvas === null)  return;
+
+    canvas.width = window.innerWidth - 60;
+
+    BellmanFord(graphObject, 0);
+
+    // Before
+    // let renderObject = new GraphRender(canvas,graph,renderingMode);
+    // renderObject.draw();
+    // updateGraphDetailSection();
+
+    let renderObject = new GraphRender(canvas,graphObject,renderingMode);
+    renderObject.draw();
+    //updateGraphDetailSection();
+
+    //console.log("Render called...");
+
    
 }
 
@@ -217,7 +247,16 @@ const updateGraphDetailSection  = () : void => {
     for (let i=0;i<nbrNodes;i++) {
 
         const nodeValue : number = Math.round( Math.random() * MAX_NODE_VALUE ) + 1;    
-        console.log(i + " value is " + " nodeValue, edges --> " + graphObject.getEdgesForNode(i));
+
+        let edgesArray : Edge[] = graphObject.getEdgesForNode(i);
+
+
+//        console.log(i + " value is " + " nodeValue, edges --> " + graphObject.getEdgesForNode(i));
+        console.log(i + " value is " + " nodeValue, edges --> " );
+        edgesArray.forEach((edge) => {
+            console.log(`From/To [${edge.src},${ edge.dest}], weight of ${edge.weight}`);
+
+        });   
     }
 
     let nodeCount : HtmlControl;

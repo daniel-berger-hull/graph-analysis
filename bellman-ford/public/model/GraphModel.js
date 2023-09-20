@@ -20,6 +20,7 @@ export class GraphObject {
         this.nbrVertex = nbrVertex;
         this.nbrEdges = nbrEdges;
         this.edge = [];
+        this.selectedNode = 0;
         this.init(nbrVertex, nbrEdges);
     }
     init(nbrVertex, nbrEdges) {
@@ -29,6 +30,8 @@ export class GraphObject {
         }
         return this;
     }
+    getSelectedNode() { return this.selectedNode; }
+    setSelectedNode(index) { this.selectedNode = (index >= 0 && index < this.nbrVertex) ? index : 0; }
     size() {
         return this.nbrVertex;
     }
@@ -42,8 +45,8 @@ export class GraphObject {
         });
         return results;
     }
-    printArr(dist) {
-        console.log("Vertex Distance from Source");
+    printArr(dist, src) {
+        console.log("Vertex Distance from Source " + src);
         for (let i = 0; i < this.nbrVertex; i++) {
             console.log(`${i} \t\t ${dist[i]}`);
         }
@@ -56,32 +59,33 @@ _GraphObject_instances = new WeakSet(), _GraphObject_validateNodeIndex = functio
     if (val < 0)
         throw "Invalid Node value passed to method " + methodName + " (value is " + val + ")";
 };
-// export function BellmanFord(graph, src) {
-//     const V = graph.nbrVertex;
-//      const E = graph.nbrEdges;
-//      const dist = [];
-//      for (let i = 0; i < V; i++) {
-//          dist[i] = Number.MAX_SAFE_INTEGER;
-//      }
-//      dist[src] = 0;
-//      for (let i = 1; i <= V - 1; i++) {
-//          for (let j = 0; j < E; j++) {
-//          const u = graph.edge[j].src;
-//          const v = graph.edge[j].dest;
-//          const weight = graph.edge[j].weight;
-//          if (dist[u] !== Number.MAX_SAFE_INTEGER && dist[u] + weight < dist[v]) {
-//              dist[v] = dist[u] + weight;
-//          }
-//          }
-//      }
-//      for (let i = 0; i < E; i++) {
-//          const u = graph.edge[i].src;
-//          const v = graph.edge[i].dest;
-//          const weight = graph.edge[i].weight;
-//          if (dist[u] !== Number.MAX_SAFE_INTEGER && dist[u] + weight < dist[v]) {
-//          console.log("Graph contains negative weight cycle");
-//          return;
-//          }
-//      }
-//          graph.printArr(dist);
-//      }
+export function BellmanFord(graph, src) {
+    const V = graph.nbrVertex;
+    const E = graph.nbrEdges;
+    const dist = [];
+    for (let i = 0; i < V; i++) {
+        dist[i] = Number.MAX_SAFE_INTEGER;
+    }
+    dist[src] = 0;
+    for (let i = 1; i <= V - 1; i++) {
+        for (let j = 0; j < E; j++) {
+            const u = graph.edge[j].src;
+            const v = graph.edge[j].dest;
+            const weight = graph.edge[j].weight;
+            if (dist[u] !== Number.MAX_SAFE_INTEGER && dist[u] + weight < dist[v]) {
+                dist[v] = dist[u] + weight;
+            }
+        }
+    }
+    for (let i = 0; i < E; i++) {
+        const u = graph.edge[i].src;
+        const v = graph.edge[i].dest;
+        const weight = graph.edge[i].weight;
+        if (dist[u] !== Number.MAX_SAFE_INTEGER && dist[u] + weight < dist[v]) {
+            console.log("Graph contains negative weight cycle");
+            return dist;
+        }
+    }
+    graph.printArr(dist, src);
+    return dist;
+}
