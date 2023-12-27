@@ -166,3 +166,4 @@ const getRandomEdgeIndexes = (currentIndex, nbrNodes) => {
     }
     return indexes;
 };
+//# sourceMappingURL=index.js.map

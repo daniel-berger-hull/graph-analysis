@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Traversal</title>
+
+     <link  rel="stylesheet" href="index.css" >
+</head>
+<body>
+    
+      <div class="wrapper">
+        <div id="header">
+            <div class="header-rotated-section">
+                <span class="header-title">Bellman-Ford Traversal!</span>
+            </div>
+            
+        </div>
+
+        <div id="center-section">
+            <canvas id="graph-canvas" width="1200px"  height="400px">Your browser does not support the HTML5 canvas tag.</canvas>     
+            
+
+            <!-- <div id="graph-distribution-radio-section">
+                <ul id="graph-distribution-list">
+                    <li class="graph-distribution-radio">
+                        <input type="radio" id="circular-rendering" name="fav_language" value="Circular"><img src="circular.png" width="20px" height="20px">
+                    </li>
+                    <li class="graph-distribution-radio">
+                        <input type="radio" id="concentric-rendering" name="fav_language" value="Concentric"><img src="concentric.png" width="20px" height="20px">
+                    </li>
+                    <li class="graph-distribution-radio">
+                        <input type="radio" id="random-rendering" name="fav_language" value="Random"><img src="Random.png" width="20px" height="20px">
+                    </li>
+                </ul>
+            </div> -->
+        </div>
+
+       
+
+        
+
+        <div id="graph-detail-section">
+
+             <div id="graph-detail-section-title">Details</div>
+             
+            <div>
+                <span>Node Count</span>
+                <span id="NodeTotalCount"></span>
+            </div>
+
+            <div> 
+                <span >Deep First Search</span>
+            </div>
+            <div id="detail-user-section" title="To see the path starting from a specific node, enter the node index and click on button DFS">
+               
+                <span >Start Node</span>
+                <input type="text" id="NodeToWorkOn" />
+                <button id="dfs-button">DFS</button>
+               
+             
+
+                <div  id="warning-section">
+                    <img src="warning.png"  width="20px" height="20px"  />
+                    <span id="error-warning-msg">ddd</span>
+
+                </div>
+            </div>
+            <div  title="Click on button All Path! and look into the browser's console. All the paths, starting from every node will be detailed">
+                <span >Search all paths</span>
+                <button id="dfs-all-path-button">All Paths!</button>
+            </div>
+    
+        </div>
+    </div>
+
+    <script type="module">
+
+        import { init,render } from './index.js';
+
+         init();
+         render();
+         //updateGraphDetailSection();
+
+    </script> 
+
+
+
+
+
+
+</body>
+</html>

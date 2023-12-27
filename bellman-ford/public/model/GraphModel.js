@@ -89,3 +89,4 @@ export function BellmanFord(graph, src) {
     graph.printArr(dist, src);
     return dist;
 }
+//# sourceMappingURL=GraphModel.js.map

@@ -7,3 +7,4 @@ export function initPage() {
 }
 // this is the starting point of your app
 initPage();
+//# sourceMappingURL=main.js.map
