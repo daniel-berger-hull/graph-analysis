@@ -1,7 +1,19 @@
 
+Dec 22, 2023
+===========
 
-Aug 14 12
-=======
+Worked on the Typescript problems, and had a solution (not pretty dough), where all the typescript code can
+be used and seen in the browser
+
+Will resume the study of graph using Typescript from now on...
+
+To Do:
+  Need to pull the latest progress from the js-graph-analysis\graph-dsf-weight project (as it is the most advanced of my projects)
+  Diskjtra and Custom render are the top priority to include into this Typescript project
+
+
+Aug 14 2023
+===========
 
   Started the conversion to Typescript, but the inclusion the the transpiled javascript is
   causing a lot of problems...
