@@ -30,6 +30,20 @@ body {
     background-color: white;
 }
 
+.page-section {
+
+    margin-top: 20px;
+    padding: 10px;
+    /* height: 100px; */
+    background-image: linear-gradient(#0046BE, #6280b4);
+    border: 2px solid #FBED20;
+    box-shadow: 5px 5px 5px black;   
+    border-radius: 8px;
+    font-size: 12px;
+
+}
+
+
 #center-section {
     width: 100%;
     margin: auto;
@@ -154,10 +168,29 @@ body {
 }
 
 
-#infoBox1 {
+/* #infoBox1 {
     background-color: black;
    
+} */
+
+/**/
+.page-section-title {
+    margin-bottom: 10px;
+    color: yellow;
+    font-size: 20px;
+    text-shadow: 2px 2px 2px black;   
 }
+
+.page-section-highlight-text {
+    color: #FBED20;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px black;   
+}
+
+.page-section-input {
+    width: 25px;
+}
+
 
 
 /* Note: Since this is for the Web Component 'infoBox', it should not be here, in a general CSS */

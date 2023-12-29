@@ -1,9 +1,13 @@
-import { CIRCULAR_GRAPH_RENDERING  , CONCENTRIC_GRAPH_RENDERING  ,RANDOM_GRAPH_RENDERING  } from './RenderingConstants.js';
+import { CIRCULAR_GRAPH_RENDERING  , CONCENTRIC_GRAPH_RENDERING  ,RANDOM_GRAPH_RENDERING , CUSTOM_GRAPH_RENDERING } from './RenderingConstants.js';
 
 
 
-import { GraphObject }      from '../model/GraphModel';
+import { GraphObject, EdgeParams }     from '../model/GraphModel.js'; 
+
+
+//import  { determinePos } from './NodeSpaceLocator.js';
 import  { determinePos } from './NodeSpaceLocator.js';
+
 
 
 
@@ -21,6 +25,7 @@ export class GraphRender {
 
 
     #canvas : HTMLCanvasElement;   
+//    #graphObject : GraphObject;
     #graphObject : GraphObject;
     #renderingMode : number;
 
@@ -55,21 +60,15 @@ export class GraphRender {
             return true;
     }
 
-    getCanvas() : HTMLCanvasElement      {  return this.#canvas;         };
+    getCanvas() : HTMLCanvasElement       {  return this.#canvas;         };
     getGraph() : GraphObject             {  return this.#graphObject;    };
-    getRenderingMode() : number          {  return this.#renderingMode;  };    
+    getRenderingMode() : number           {  return this.#renderingMode;  };    
 
 
-    setCanvas(canvas:HTMLCanvasElement)  {  this.#canvas = canvas;       };
+    setCanvas(canvas:HTMLCanvasElement)   {  this.#canvas = canvas;       };
     setGraph(graph:GraphObject)          {  this.#graphObject = graph;   };
-    setRenderingMode(mode:number)        {  this.#renderingMode = mode;  };    
+    setRenderingMode(mode:number)         {  this.#renderingMode = mode;  };    
 
-
-   
-
-   
-
-    //let test : number;
 
     renderNode( context : CanvasRenderingContext2D, 
                 position : Point,    // May not be the right type here...
@@ -118,15 +117,23 @@ export class GraphRender {
         if ( directionnal ) {
 
             let direction : Vector  = { dx : (startPos.x - endPos.x), dy : (startPos.y - endPos.y) };
+            //let direction : Vector  = { dx : (endPos.x - startPos.x), dy : (endPos.y - startPos.y) };
             direction.dx = direction.dx * 0.1;
             direction.dy = direction.dy * 0.1;
+            // let newEndPos= { ... endPos};
+            // newEndPos.x -=  direction.dx;
+            // newEndPos.y -=  direction.dy;
             
-            context.beginPath();
-            context.moveTo(endPos.x, endPos.y);
-            context.lineTo(endPos.x + direction.dx, endPos.y + direction.dy);
 
-            context.strokeStyle = "#FF0000";
-            //context.stroke(); 
+
+            context.beginPath();
+            // context.moveTo(endPos.x, endPos.y);
+            // context.lineTo(endPos.x + direction.dx, endPos.y + direction.dy);
+            // context.moveTo(newEndPos.x, newEndPos.y);
+            // context.lineTo(newEndPos.x + direction.dx, newEndPos.y + direction.dy);
+
+            // context.strokeStyle = "#FF0000";
+            // context.stroke(); 
 
             const newX = (direction.dx*0.70710) - (direction.dy*0.70710);
             const newY = (direction.dx*0.70710) + (direction.dy*0.70710);
@@ -136,6 +143,9 @@ export class GraphRender {
             context.beginPath();
             context.moveTo(endPos.x, endPos.y);
             context.lineTo(endPos.x + rotated.dx, endPos.y + rotated.dy);
+            // context.moveTo(newEndPos.x, newEndPos.y);
+            // context.lineTo(newEndPos.x + rotated.dx, newEndPos.y + rotated.dy);
+            
 
             context.strokeStyle = "#FF0000";
             context.stroke(); 
@@ -182,13 +192,12 @@ export class GraphRender {
                                      y: nodePosArray[i].y };
 
 
-            const edges =  graph.getEdgesForNode(i);
-
+            let edges : EdgeParams[] = graph.getEdgesForNode(i);    
             edges.forEach( nextEdge => { 
 
-                if (nextEdge.dest !== nextEdge.src) {
+                if (nextEdge.toNode !== nextEdge.fromNode) {
                    // console.log(i + " to " + index);
-                    const endNodePos =   { x: nodePosArray[nextEdge.dest].x,   y: nodePosArray[nextEdge.dest].y };
+                    const endNodePos =   { x: nodePosArray[nextEdge.toNode].x,   y: nodePosArray[nextEdge.toNode].y };
                     this.renderSegment(  ctx,  startNodePos,  endNodePos, "#00FF00", DIRECTION_GRAPH); 
                 } else {
                     console.log("Render: an edge on the same node detected!");

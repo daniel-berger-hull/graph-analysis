@@ -21,7 +21,7 @@
             <canvas id="graph-canvas" width="1200px"  height="400px">Your browser does not support the HTML5 canvas tag.</canvas>     
             
 
-            <!-- <div id="graph-distribution-radio-section">
+            <div id="graph-distribution-radio-section">
                 <ul id="graph-distribution-list">
                     <li class="graph-distribution-radio">
                         <input type="radio" id="circular-rendering" name="fav_language" value="Circular"><img src="circular.png" width="20px" height="20px">
@@ -32,23 +32,33 @@
                     <li class="graph-distribution-radio">
                         <input type="radio" id="random-rendering" name="fav_language" value="Random"><img src="Random.png" width="20px" height="20px">
                     </li>
+                    <li class="graph-distribution-radio">
+                        <input type="radio" id="custom-rendering" name="fav_language" value="Random"><img src="Random.png" width="20px" height="20px">
+                    </li>
                 </ul>
-            </div> -->
+            </div>
         </div>
 
-       
-
         
+        <div class="page-section">
 
-        <div id="graph-detail-section">
+            <div class="page-section-title">Details</div>
+            
+           <div>
+               <span>Node Count</span>
+               <span id="NodeTotalCount" class="page-section-highlight-text"></span>
+           </div>
+           <div>
+               <span>Edge Count</span>
+               <span id="EdgeTotalCount" class="page-section-highlight-text"></span>
+           </div>
+       </div>
 
-             <div id="graph-detail-section-title">Details</div>
+
+        <div class="page-section">            
+             <div id="graph-detail-section-title">Action</div>
              
-            <div>
-                <span>Node Count</span>
-                <span id="NodeTotalCount"></span>
-            </div>
-
+    
             <div> 
                 <span >Deep First Search</span>
             </div>

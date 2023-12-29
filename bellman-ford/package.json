@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tsc && copy .\\src\\*.html .\\public && copy .\\src\\*.css .\\public",
+    "build": "npx tsc && copy .\\src\\*.html .\\public && copy .\\src\\*.css .\\public && copy .\\src\\*.png",
     "clean": "del /s .\\public\\*.js && del /s .\\public\\*.map && del /s .\\public\\*.html && del /s \\public\\*.css && rmdir .\\public /s /q",
     "serve": "node server.js"
   },

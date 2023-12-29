@@ -1,7 +1,10 @@
 
 
-import { CIRCULAR_GRAPH_RENDERING  , CONCENTRIC_GRAPH_RENDERING  ,RANDOM_GRAPH_RENDERING  } from './view/RenderingConstants.js';
-import { BellmanFord,GraphObject, Edge }  from './model/GraphModel.js';
+import { CIRCULAR_GRAPH_RENDERING  , CONCENTRIC_GRAPH_RENDERING  ,RANDOM_GRAPH_RENDERING, CUSTOM_GRAPH_RENDERING  } from './view/RenderingConstants.js';
+// import { BellmanFord,GraphObject, Edge }  from './model/GraphModel.js';
+import { GraphObject, EdgeParams }  from './model/GraphModel.js'
+
+
 import { GraphRender}   from './view/GraphRender.js';
 
 
@@ -13,13 +16,16 @@ const MAX_EDGE_NUMBER : number  = 2;
 const ERROR_MESSAGE_TIMEOUT : number  = 3000;
 
 
-let renderingMode : number = CIRCULAR_GRAPH_RENDERING;
+//let renderingMode : number = CIRCULAR_GRAPH_RENDERING;
+let renderingMode : number = CUSTOM_GRAPH_RENDERING;
 
 
 type   HtmlControl =  HTMLElement | null;
 
 
 let graphObject : GraphObject;
+// let graphObject : GraphObject2;
+
 
 /////////////////////////////////////////////////////////////////////////////////
 /*                      EVENT HANDLERS SECTION                                */
@@ -43,16 +49,22 @@ const setEventHandlers  = () : void => {
      dfsAllPathButton = document.getElementById("dfs-all-path-button");
      if ( dfsAllPathButton !== null)    dfsAllPathButton.addEventListener("click", dfsAllPathButtonClickHandler );
 
+//     const radioButtons = ["circular-rendering","concentric-rendering","random-rendering","custom-rendering"];
+     const radioButtons : string[] = ["circular-rendering","concentric-rendering","random-rendering","custom-rendering"];
 
+     
+     
     //  const radioButtons = ["circular-rendering","concentric-rendering","random-rendering"];
 
 
-    //  radioButtons.forEach( radioID => {
+      radioButtons.forEach( radioID => {
 
-    //     const radioButton = document.getElementById(radioID);
-    //     radioButton.addEventListener("click", renderingButtonClickHandler );
-
-    //  });
+         const radioButton = document.getElementById(radioID) as HtmlControl;
+//         const radioButton = document.getElementById(radioID) as HtmlInputRadioButton;
+     
+           
+         if (radioButton != null) radioButton.addEventListener("click", renderingButtonClickHandler );
+      });
      
 
 }
@@ -110,56 +122,117 @@ const dfsButtonClickHandler  = () => {
 const dfsAllPathButtonClickHandler  = () => {
 
   
-
-    //*** */
     const nbrNodes = graphObject.size();
 
     console.log("Find path for all " + nbrNodes + "Nodes");
 
-    for (let i=0;i<nbrNodes;i++) {
+    // Need to implement this one...
+    // for (let i=0;i<nbrNodes;i++) {
 
-        graphObject.setSelectedNode(i);
-        //const path = graphObject.DFS(i);
+    //     graphObject.setSelectedNode(i);
+    //     //const path = graphObject.DFS(i);
 
-        const path : number[] =  BellmanFord(graphObject, i );
+    //     const path : number[] =  BellmanFord(graphObject, i );
 
-      
+    
+    //     console.log(`${i} - ${path}`);
 
-        // export function BellmanFord(graph : GraphObject, src : number) {
+    //     if (path.length === nbrNodes) 
+    //         console.log("%cComplete",'color: #00ff00');
+    //     else
+    //         console.log(`%cPartial ${path.length}`,'color: #ff0000');
+    // }
 
-
-       
-
-
-
-        console.log(`${i} - ${path}`);
-
-        if (path.length === nbrNodes) 
-            console.log("%cComplete",'color: #00ff00');
-        else
-            console.log(`%cPartial ${path.length}`,'color: #ff0000');
-    }
-    //** */
 }
 
+
+
+
+function renderingButtonClickHandler(event : UIEvent) : void  {
+//    function renderingButtonClickHandler(event : PointerEvent) : void  {
+
+
+
+   if (event == null || event.currentTarget == null)  return;
+
+    //Should use something more specific, like the HtmlInputRadioButton  class, but it not working...
+    const selectedRadio : any = event.currentTarget;
+     
+    if (selectedRadio.id === "circular-rendering") {
+        console.log("Click circular-rendering");
+        renderingMode = CIRCULAR_GRAPH_RENDERING;
+    } else if ( selectedRadio.id === "concentric-rendering") {
+        console.log("Click concentric-rendering");
+        renderingMode = CONCENTRIC_GRAPH_RENDERING;
+    } else if ( selectedRadio.id === "random-rendering") {
+        console.log("Click random-rendering");
+        renderingMode = RANDOM_GRAPH_RENDERING;
+    } else if ( selectedRadio.id === "custom-rendering") {
+        console.log("Click custom-rendering");
+        renderingMode = CUSTOM_GRAPH_RENDERING;
+    }
+
+    render();
+}
+
+
+
+// Note: Should remove this method, as it relies on the old version of the GraphObject
 function initBellman () : void {
 
     const V = 5;
     const E = 8;
-    graphObject = new GraphObject(V, E);
+    // graphObject = new GraphObject(V, E);
 
-    graphObject.edge[0] = new Edge(0, 1, 1);
-    graphObject.edge[1] = new Edge(0, 2, 4);
-    graphObject.edge[2] = new Edge(1, 2, 3);
-    graphObject.edge[3] = new Edge(1, 3, 2);
-    graphObject.edge[4] = new Edge(1, 4, 2);
-    graphObject.edge[5] = new Edge(3, 2, 5);
-    graphObject.edge[6] = new Edge(3, 1, 1);
-    graphObject.edge[7] = new Edge(4, 3, 3);
+    // graphObject.edges[0] = new Edge(0, 1, 1);
+    // graphObject.edges[1] = new Edge(0, 2, 4);
+    // graphObject.edges[2] = new Edge(1, 2, 3);
+    // graphObject.edges[3] = new Edge(1, 3, 2);
+    // graphObject.edges[4] = new Edge(1, 4, 2);
+    // graphObject.edges[5] = new Edge(3, 2, 5);
+    // graphObject.edges[6] = new Edge(3, 1, 1);
+    // graphObject.edges[7] = new Edge(4, 3, 3);
 
-    console.log(`initBellman Graph size is ${graphObject.size()}`);
+    // console.log(`initBellman Graph size is ${graphObject.size()}`);
     
     // BellmanFord(graphObject, 0);
+}
+
+function initDijkstra(nbrNodes : number) {
+
+    graphObject = new GraphObject(nbrNodes);
+
+
+    graphObject.addDoubleEdgeWithWeight(0, 1, 4);
+    graphObject.addDoubleEdgeWithWeight(0, 7, 8);
+    graphObject.addDoubleEdgeWithWeight(1, 2, 8);
+    graphObject.addDoubleEdgeWithWeight(1, 7, 11);
+    graphObject.addDoubleEdgeWithWeight(2, 3, 7);
+    graphObject.addDoubleEdgeWithWeight(2, 8, 2);
+    graphObject.addDoubleEdgeWithWeight(2, 5, 4);
+    graphObject.addDoubleEdgeWithWeight(3, 4, 9);
+    graphObject.addDoubleEdgeWithWeight(3, 5, 14);
+    graphObject.addDoubleEdgeWithWeight(4, 5, 10);
+    graphObject.addDoubleEdgeWithWeight(5, 6, 2);
+    graphObject.addDoubleEdgeWithWeight(6, 7, 1);
+    graphObject.addDoubleEdgeWithWeight(6, 8, 6);
+    graphObject.addDoubleEdgeWithWeight(7, 8, 7);
+
+  
+    /// Graph #2 start here...
+    // Note Nov 17: Would can't use it for now, till the array of letter problem , in the PathFind.js :: shortestPath method is not fixex...
+    // graphObject.addDoubleEdgeWithWeight(9,0, 7);
+    // graphObject.addDoubleEdgeWithWeight(10,9, 10);
+    // graphObject.addDoubleEdgeWithWeight(11, 10, 8);
+    // graphObject.addDoubleEdgeWithWeight(15, 11,12);
+    // graphObject.addDoubleEdgeWithWeight(12, 15, 2);
+    // graphObject.addDoubleEdgeWithWeight(9, 12, 6);
+    // graphObject.addDoubleEdgeWithWeight(14, 12, 5);
+    // graphObject.addDoubleEdgeWithWeight(13, 14, 9);
+    // graphObject.addDoubleEdgeWithWeight(5, 11, 3);
+    // graphObject.addDoubleEdgeWithWeight(6, 10, 3);
+    
+    //shortestPath(graphObject,0);
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -168,7 +241,10 @@ function initBellman () : void {
 
 export const init = () : void => {
 
+    const nbrNodes = 9;
+
     initBellman();
+    initDijkstra(nbrNodes);
     setEventHandlers();
 }
 
@@ -185,15 +261,20 @@ export const render = () : void=> {
 
     canvas.width = window.innerWidth - 60;
 
-    BellmanFord(graphObject, 0);
+    //BellmanFord(graphObject, 0);
 
     // Before
     // let renderObject = new GraphRender(canvas,graph,renderingMode);
     // renderObject.draw();
     // updateGraphDetailSection();
 
+    // let renderObject = new GraphRender(canvas,graphObject,renderingMode);
+    // renderObject.draw();
+
     let renderObject = new GraphRender(canvas,graphObject,renderingMode);
     renderObject.draw();
+
+
     //updateGraphDetailSection();
 
     //console.log("Render called...");
@@ -242,26 +323,21 @@ const hideWarningMessage= () : void => {
 const updateGraphDetailSection  = () : void => {
 
     
-    const nbrNodes : number =  graphObject.size();
-    for (let i=0;i<nbrNodes;i++) {
-
-        const nodeValue : number = Math.round( Math.random() * MAX_NODE_VALUE ) + 1;    
-
-        let edgesArray : Edge[] = graphObject.getEdgesForNode(i);
-
-
-//        console.log(i + " value is " + " nodeValue, edges --> " + graphObject.getEdgesForNode(i));
-        console.log(i + " value is " + " nodeValue, edges --> " );
-        edgesArray.forEach((edge) => {
-            console.log(`From/To [${edge.src},${ edge.dest}], weight of ${edge.weight}`);
-
-        });   
-    }
-
+    // The detail section list the node and edge count, right underneat the HTML Canvas...
+    const nbrNodes : number =  graphObject.getNbrNodes();
     let nodeCount : HtmlControl;
     nodeCount = document.getElementById("NodeTotalCount");
     if ( nodeCount !== null)    nodeCount.innerHTML = nbrNodes.toString();
 
+    const nbrEdges : number =  graphObject.getNbrEdges();
+    let edgeCount : HTMLSpanElement | null;
+    edgeCount = document.getElementById("EdgeTotalCount");
+    if ( edgeCount !== null)    edgeCount.innerHTML = nbrEdges.toString();
+    
+
+
+    console.log("Display content of graphObject\n" +  graphObject.toString());
+  
 }
 
 
