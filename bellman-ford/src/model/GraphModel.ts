@@ -1,7 +1,10 @@
 
 const NODE_NOT_DEFINED : number = -10;
 
+// This type represents an Edge in a graph. 
+
 export type EdgeParams = {
+    //Following value are 0 based position of a node in a GraphObject's 'edges' array...
     fromNode : number;
     toNode   : number;
     weight   : number;
@@ -12,8 +15,83 @@ export const INF : number = 2147483647;
 export const DEFAULT_NODE_VALUE : number  = 9999;
 export const DEFAULT_EDGE_WEIGHT : number = 1;
 
-
 export const NO_EDGES_DEFINED : number = 0;
+
+
+// This class holds complementary information, that are specific for a moment in the application  i.e: Which nodes are selected, the last paths found, etc
+export class GraphState {
+
+
+    #valid : boolean;
+    #startNodePath : number;
+    #endNodePath : number;
+    #selectedNode : number;
+
+    #graphObject :  GraphObject | null;
+
+    #distances : number[];
+    #paths : number[][];
+    
+
+    constructor() {
+
+        this.#valid = false;
+        this.#graphObject =  null; 
+        this.#startNodePath = NODE_NOT_DEFINED;
+        this.#endNodePath   = NODE_NOT_DEFINED;
+        this.#selectedNode  = NODE_NOT_DEFINED;
+
+        this.#distances = [];
+        this.#paths = [];
+
+    }
+
+
+    isValid() : boolean                      { return this.#valid;            }
+
+    getGraphObject() : GraphObject | null    {   return this.#graphObject;    }
+    getSelectedNode() : number               {   return this.#selectedNode;   }
+    getStartNodePath() : number              {   return this.#startNodePath;  }
+    getEndNodePath() : number                {   return this.#endNodePath;    }
+    getDistances() : number[]                {   return this.#distances;      }
+    getPaths() :  number[][]                 {   return this.#paths;          }
+
+
+    valid() : void                           {  this.#valid = true;   }                     
+    invalid() : void                         {  this.#valid = false;   }                     
+
+
+    setGraphObject(go:GraphObject)   {  if ( go === null )  throw "assignement to null of GraphObject";  this.#graphObject = go;  }
+    setSelectedNode(index:number)    {   this.#validateNodeIndex(index,"setStartNodePath");     this.#selectedNode  =  index;     }
+    setStartNodePath(index:number)   {   this.#validateNodeIndex(index,"setStartNodePath");     this.#startNodePath = index;      }
+    setEndNodePath(index:number)     {   this.#validateNodeIndex(index,"setStartNodePath");     this.#endNodePath   = index;      }
+    
+    setDistances(d: number[])        {  this.#distances = d; }
+    setPaths(p: number[][])          {  this.#paths = p;     }
+
+    #validateNodeIndex(i :number, methodName : string) {
+
+        if (this.#graphObject == null)
+           throw methodName + ": No GraphObject defined for this GraphState object";
+         
+        if (  (i < 0) || (i > this.#graphObject.getNbrNodes()))  
+            throw "Invalid Node passed to method " + methodName + " (v is " + i + " and the graph has a maximum of " + this.#graphObject.getNbrNodes() + ")";
+    }
+
+    toString() : string {
+
+        let strArray : string[] = [];
+
+        strArray.push(`Selected Node: ${this.getSelectedNode() }\n`);
+        strArray.push(`Start Node: ${this.getStartNodePath() }\n`);
+        strArray.push(`End  Node: ${this.getEndNodePath() }\n`);
+        strArray.push(`Distances from ${this.getStartNodePath() } are ${this.getDistances() }\n`);
+        strArray.push(`Path from ${this.getStartNodePath() } are ${this.getPaths() }\n`);
+        
+        return strArray.toString();;
+    }
+
+}
 
 
 export class GraphObject {
@@ -22,11 +100,11 @@ export class GraphObject {
     #nbrNodes : number;
     #nbrEdges : number;   // Nov 3: This value appears to be not required, as the getNbrEdges exists for this...
 
-    #startNodePath : number;
-    #endNodePath : number;
-    #selectedNode : number;
+    // #startNodePath : number;
+    // #endNodePath : number;
+    // #selectedNode : number;
 
-    #edges : EdgeParams[];
+    edges : EdgeParams[];
     #values : number[];
 
 
@@ -36,16 +114,16 @@ export class GraphObject {
         this.#nbrNodes = nbrNodes;
         this.#nbrEdges = NO_EDGES_DEFINED;
         
-        this.#edges = [];
+        this.edges = [];
 
         // Nov 3 Added to align with the older Graph.js --> Each node had no values in GraphObject
         //this.values = new Array(nbrNodes);
         this.#values = new Array(nbrNodes);
         
-        this.#selectedNode = 0;
+        // this.#selectedNode = 0;
 
-        this.#startNodePath = NODE_NOT_DEFINED;
-        this.#endNodePath   = NODE_NOT_DEFINED;
+        // this.#startNodePath = NODE_NOT_DEFINED;
+        // this.#endNodePath   = NODE_NOT_DEFINED;
 
     }
 
@@ -53,24 +131,27 @@ export class GraphObject {
         return this.#nbrNodes;
     }
 
-    getNbrNodes()                   {  return this.#nbrNodes;        }
-    getNbrEdges()                   {  return this.#edges.length;    }
+    getNbrNodes()                    {  return this.#nbrNodes;        }
+    getNbrEdges()                    {  return this.edges.length;     }
 
-    getSelectedNode()               {   return this.#selectedNode;   }
-    getStartNodePath()              {   return this.#startNodePath;  }
-    getEndNodePath()                {   return this.#endNodePath;    }
+    // getSelectedNode()                {   return this.#selectedNode;   }
+    // getStartNodePath()               {   return this.#startNodePath;  }
+    // getEndNodePath()                 {   return this.#endNodePath;    }
 
-    setSelectedNode(index:number)    {   this.#selectedNode = ( index>=0 && index < this.getNbrNodes()) ? index : 0; }
-    setStartNodePath(index:number)   {   this.#validateNodeIndex(index,"setStartNodePath");     this.#startNodePath= index; }
-    setEndNodePath(index:number)     {   this.#validateNodeIndex(index,"setStartNodePath");     this.#endNodePath  = index; }
+    // setSelectedNode(index:number)    {   this.#selectedNode = ( index>=0 && index < this.getNbrNodes()) ? index : 0;         }
+    // setStartNodePath(index:number)   {   this.#validateNodeIndex(index,"setStartNodePath");     this.#startNodePath= index;  }
+    // setEndNodePath(index:number)     {   this.#validateNodeIndex(index,"setStartNodePath");     this.#endNodePath  = index;  }
 
+    getEdges()                       {   return this.edges;  }
+    getEdge(index : number)          {   this.#validateNodeIndex(index,"getEdge");   return this.edges[index];  }
+    
 
     getEdgesForNode(v:number) : EdgeParams[]{
 
         this.#validateNodeIndex(v, "getEdgesForNode");
 
         const results : EdgeParams[] = [];
-        this.#edges.forEach(nextEdge => {
+        this.edges.forEach(nextEdge => {
 
             if (nextEdge.fromNode === v) {
                 results.push(nextEdge);
@@ -102,7 +183,7 @@ export class GraphObject {
         this.#validateEdgeWeight(weight, "addEdge");
   
         const newEdge  : EdgeParams = { "fromNode" : fromNode, "toNode" : toNode, "weight": weight};
-        this.#edges.push(newEdge);
+        this.edges.push(newEdge);
     }
 
 
@@ -118,10 +199,13 @@ export class GraphObject {
         this.#validateNodeIndex(toNode, "addEdge");
         this.#validateEdgeWeight(weight, "addEdge");
 
-        let newEdge : EdgeParams = { "fromNode" : fromNode, "toNode" : toNode, "weight": weight};
-        this.#edges.push(newEdge);
+        let newEdgeA : EdgeParams = { "fromNode" : fromNode, "toNode" : toNode, "weight": weight};
+        this.edges.push(newEdgeA);
+        let newEdgeB : EdgeParams = { "fromNode" : toNode , "toNode" : fromNode, "weight": weight};
+        this.edges.push(newEdgeB);
+        
 
-        console.log(`addDoubleEdgeWithWeight From ${fromNode} To ${toNode}, new Edge Size is ${this.#edges.length}`)
+        console.log(`addDoubleEdgeWithWeight From ${fromNode} To ${toNode}, new Edge Size is ${this.edges.length}`)
     }
 
 

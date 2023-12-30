@@ -1,4 +1,35 @@
 
+Dec 29, 2023
+===========
+
+ The Diskjstra algo appears to work ok. Tested with 16 nodes with correct results (Distances and Path)
+ The rendering appears ok too.
+ Started to have some randering in color of the path (Diskstras)
+
+ To Do:
+   Need to continue on the draw path (from a start node to an end node) in a color
+   Draw node colors based on the distance of a source node? (Closer in green and futher in red)
+
+
+
+Dec 28, 2023
+===========
+
+  Many Javascript classes/file to typescript(Index.ts, the Model and View classes)
+  Fixed the custome rendering and it works
+  Started to have the index.html look like the one in the js-graph-analysis\graph-dsf-weight project
+
+  The Search All paths! doesn't appear to work
+
+
+To Do: 
+  Work on the Diskjstra algo
+  Continue to work on the  index.html (to be like the js-graph-analysis\graph-dsf-weight)
+
+  Restore the BellmanFord code
+
+
+
 Dec 22, 2023
 ===========
 
