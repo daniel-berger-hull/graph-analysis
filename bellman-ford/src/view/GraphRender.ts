@@ -210,7 +210,7 @@ export class GraphRender {
                     const endNodePos =   { x: nodePosArray[nextEdge.toNode].x,   y: nodePosArray[nextEdge.toNode].y };
                     this.renderSegment(  ctx,  startNodePos,  endNodePos, "#00FF00", DIRECTION_GRAPH); 
                 } else {
-                    console.log("Render: an edge on the same node detected!");
+                    console.log("Render: an edge on the same node detected!"); 
                     this.renderLoopSegment (ctx, startNodePos,  10, "#00FF00");
                 }
                
