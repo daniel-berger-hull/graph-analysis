@@ -1,4 +1,11 @@
 
+Nov 03, 2024
+============
+
+ This project should be converted to a ReactJS + Typescript project (instead on being 
+ an HTML based project). It would of course introduce a dependency on ReactJS, but
+ would come with benefits (the debugging in browswer would be much easier)
+
 Dec 29, 2023
 ===========
 
